@@ -1,0 +1,1963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COAL Mid Exam — Irvine32 / MASM Complete Study Sheet</title>
+<meta name="description" content="Complete beginner-friendly COAL mid exam study sheet for MASM + Irvine32, covering labs 1–6 through loops and jumps.">
+<style>
+:root{
+  --bg:#0a0c10;
+  --panel:#111318;
+  --panel2:#171a21;
+  --border:#252a35;
+  --text:#d4dae8;
+  --muted:#8f98aa;
+  --gold:#e8c56d;
+  --blue:#5fb3ff;
+  --red:#ff6b6b;
+  --green:#6bffb8;
+  --purple:#b99cff;
+  --shadow:0 18px 50px rgba(0,0,0,.28);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:"DM Sans","Segoe UI",Arial,sans-serif;
+  line-height:1.65;
+}
+code,pre,kbd,.mono{font-family:"JetBrains Mono","Cascadia Code",Consolas,monospace}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+.layout{display:flex;min-height:100vh}
+.sidebar{
+  position:fixed;left:0;top:0;bottom:0;width:270px;
+  background:#0d1015;border-right:1px solid var(--border);
+  padding:24px 16px;overflow:auto;z-index:10;
+}
+.brand{padding:8px 10px 20px;border-bottom:1px solid var(--border);margin-bottom:14px}
+.brand h1{font-family:Georgia,serif;color:var(--gold);font-size:22px;line-height:1.2;margin:0 0 8px}
+.brand p{font-size:12px;color:var(--muted);margin:0}
+.nav a{
+  display:block;padding:8px 10px;border-radius:8px;color:var(--muted);
+  font-size:13px;margin:2px 0;
+}
+.nav a:hover{background:var(--panel2);color:var(--text);text-decoration:none}
+.main{margin-left:270px;width:calc(100% - 270px)}
+.hero{
+  padding:72px 7vw 54px;border-bottom:1px solid var(--border);
+  background:radial-gradient(circle at 75% 10%,rgba(95,179,255,.08),transparent 32%),
+             radial-gradient(circle at 20% 30%,rgba(232,197,109,.07),transparent 30%);
+}
+.hero .tag{
+  display:inline-block;border:1px solid rgba(232,197,109,.35);color:var(--gold);
+  padding:5px 10px;border-radius:999px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+}
+.hero h2{font-family:Georgia,serif;font-size:clamp(38px,6vw,72px);line-height:1.03;margin:18px 0 16px;max-width:950px}
+.hero h2 span{color:var(--gold)}
+.hero p{max-width:850px;color:var(--muted);font-size:17px}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.badge{border:1px solid var(--border);background:rgba(255,255,255,.02);padding:7px 10px;border-radius:8px;font-size:12px;color:var(--text)}
+.container{max-width:1100px;margin:auto;padding:0 28px}
+section{padding:52px 0;border-bottom:1px solid var(--border)}
+h2{font-family:Georgia,serif;font-size:32px;margin:0 0 12px;color:#f2f4f8}
+h3{font-size:21px;color:var(--blue);margin:28px 0 10px}
+h4{font-size:16px;color:var(--gold);margin:20px 0 8px}
+p{margin:8px 0 14px}
+.lead{color:var(--muted);max-width:850px}
+.callout{
+  border:1px solid var(--border);background:var(--panel);border-left:4px solid var(--gold);
+  border-radius:10px;padding:16px 18px;margin:18px 0;
+}
+.callout.blue{border-left-color:var(--blue)}
+.callout.green{border-left-color:var(--green)}
+.callout.red{border-left-color:var(--red)}
+.callout strong{color:#fff}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px;box-shadow:var(--shadow)}
+.card h3{margin-top:0}
+table{width:100%;border-collapse:collapse;margin:16px 0;background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+th,td{padding:11px 12px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+th{background:#151922;color:var(--gold);font-size:13px}
+td{font-size:14px}
+tr:last-child td{border-bottom:0}
+pre{
+  background:#080a0e;border:1px solid var(--border);border-radius:10px;
+  padding:16px;overflow:auto;font-size:13px;line-height:1.6;color:#dfe6f3;
+  margin:14px 0;
+}
+.inline{
+  background:#191d26;border:1px solid var(--border);padding:2px 6px;border-radius:5px;
+  color:var(--green);font-size:.9em;
+}
+ul,ol{padding-left:22px}
+li{margin:5px 0}
+.two-col{columns:2;column-gap:34px}
+.two-col > *{break-inside:avoid}
+.flow{
+  display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:16px 0;
+}
+.flow span{background:var(--panel);border:1px solid var(--border);padding:9px 12px;border-radius:8px}
+.arrow{color:var(--gold);font-weight:bold}
+.quiz{
+  border:1px solid var(--border);border-radius:10px;margin:10px 0;background:var(--panel);
+  overflow:hidden;
+}
+.quiz summary{cursor:pointer;padding:13px 15px;color:var(--text);font-weight:600}
+.quiz div{padding:0 15px 15px;color:var(--muted)}
+.checklist label{display:block;padding:8px 10px;border-bottom:1px solid var(--border)}
+.checklist input{accent-color:var(--gold);margin-right:9px}
+.note{font-size:13px;color:var(--muted)}
+.kbd{display:inline-block;border:1px solid #3a4150;background:#171a21;border-radius:5px;padding:1px 6px;font-family:monospace;font-size:12px}
+.top{position:fixed;right:20px;bottom:20px;background:var(--gold);color:#101216;border-radius:999px;padding:10px 13px;font-weight:700;box-shadow:var(--shadow)}
+footer{padding:40px 0 70px;color:var(--muted);font-size:13px}
+@media(max-width:900px){
+  .sidebar{display:none}
+  .main{margin-left:0;width:100%}
+  .hero{padding-top:46px}
+}
+@media(max-width:680px){
+  .container{padding:0 17px}
+  section{padding:38px 0}
+  .grid{grid-template-columns:1fr}
+  .two-col{columns:1}
+  pre{font-size:12px}
+  h2{font-size:27px}
+}
+@media print{
+  .sidebar,.top{display:none}
+  .main{margin:0;width:100%}
+  .hero{padding:30px}
+  section{break-inside:avoid}
+  pre{white-space:pre-wrap}
+}
+</style>
+</head>
+<body id="top">
+
+<aside class="sidebar">
+  <div class="brand">
+    <h1>COAL Mid Review</h1>
+    <p>MASM + Irvine32 · Labs 1–6 · Beginner → Loops & Jumps</p>
+  </div>
+  <nav class="nav">
+    <a href="#scope">01 · Exam Scope</a>
+    <a href="#assembly">02 · What is Assembly?</a>
+    <a href="#program">03 · Program Structure</a>
+    <a href="#registers">04 · Registers</a>
+    <a href="#numbers">05 · Number Systems</a>
+    <a href="#data">06 · Data & Directives</a>
+    <a href="#strings">07 · Strings</a>
+    <a href="#irvine">08 · Irvine32</a>
+    <a href="#input">09 · Input: Int, String & Char</a>
+    <a href="#transfer">10 · Data Transfer</a>
+    <a href="#arithmetic">11 · Arithmetic</a>
+    <a href="#flags">12 · Flags</a>
+    <a href="#cmp">13 · CMP & TEST</a>
+    <a href="#jumps">14 · Jumps</a>
+    <a href="#loops">15 · Loops</a>
+    <a href="#arrays">16 · Arrays</a>
+    <a href="#indirect">17 · Indirect Addressing</a>
+    <a href="#operators">18 · Operators</a>
+    <a href="#debugging">19 · Debugging</a>
+    <a href="#patterns">20 · Exam Patterns</a>
+    <a href="#examples">21 · Full Examples</a>
+    <a href="#cheat">22 · Cheat Sheet</a>
+    <a href="#checklist">23 · Final Checklist</a>
+    <a href="#practice">24 · Quick Practice</a>
+    <a href="#lab5manual">25 · Lab 05 Manual Additions</a>
+    <a href="#lab6manual">26 · Lab 06 Manual Additions</a>
+    <a href="#manualexam">27 · Updated Exam Priority</a>
+  </nav>
+</aside>
+
+<main class="main">
+<header class="hero">
+  <div class="container">
+    <span class="tag">FAST-NUCES Karachi · EL-2003 COAL Lab</span>
+    <h2>Computer Organization & <span>Assembly Language</span></h2>
+    <p>
+      A from-scratch, exam-focused study sheet for MASM + Kip Irvine's Irvine32 library.
+      Covers the material discussed in this chat from the beginning through arrays, loops and jumps.
+    </p>
+    <div class="badges">
+      <span class="badge">32-bit x86</span>
+      <span class="badge">MASM</span>
+      <span class="badge">Irvine32</span>
+      <span class="badge">Labs 1–6</span>
+      <span class="badge">Zero prior COAL assumed</span>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+<section id="scope">
+<h2>01 · Exam Scope</h2>
+<p class="lead">The uploaded weekly schedule shows the material before and around the Lab Mid. The user specified that the mid covers Labs 1–6, through loops and jumps, using Irvine32.</p>
+<table>
+<tr><th>Week</th><th>Topic</th><th>What to know for the mid</th></tr>
+<tr><td>1</td><td>Introduction to Assembly and Configuration of Visual Studio</td><td>MASM project structure, .data/.code, main procedure, basic Visual Studio debugging.</td></tr>
+<tr><td>2</td><td>Debugging, Basic Elements of Assembly Language, Defining Data, Intrinsic Data Types, Data Definition Statements</td><td>Registers, variables, BYTE/WORD/DWORD, directives, tracing and debugging.</td></tr>
+<tr><td>3</td><td>Data Initialization, Multiple Initialization, String Initialization</td><td>Initial values, comma-separated values, DUP, strings and null termination.</td></tr>
+<tr><td>4</td><td>Data Transfer Instructions, Instructions and Flags</td><td>MOV, XCHG, MOVZX/MOVSX, arithmetic, flags.</td></tr>
+<tr><td>5</td><td>Working with Data-Related Operators and Directives, Indirect Addressing</td><td>OFFSET, TYPE, LENGTHOF, SIZEOF, PTR, brackets and pointers.</td></tr>
+<tr><td>6</td><td>— / theory mid shown in schedule</td><td>User says Labs 1–6 are included in the lab mid.</td></tr>
+<tr><td>7</td><td>Working with Arrays and Loops, Built-in Procedures</td><td>User specifically says the mid goes through loops and jumps, so arrays/loops are included in preparation.</td></tr>
+</table>
+<div class="callout">
+<strong>Priority:</strong> Do not memorize isolated instructions. Learn the chain:
+<code class="inline">registers → memory → addressing → flags → CMP → jumps → loops → arrays</code>.
+</div>
+</section>
+
+<section id="assembly">
+<h2>02 · What Is Assembly?</h2>
+<p>Assembly language is a low-level language that is much closer to the CPU's actual operations than C/C++.</p>
+<div class="grid">
+<div class="card"><h3>C++ idea</h3><pre>int x = 10;
+int y = 20;
+int z = x + y;</pre></div>
+<div class="card"><h3>Assembly idea</h3><pre>mov eax, 10
+mov ebx, 20
+add eax, ebx</pre><p>Afterward, <strong>EAX = 30</strong>.</p></div>
+</div>
+<div class="callout blue"><strong>Core idea:</strong> Assembly means giving very specific instructions to the CPU, using registers and memory.</div>
+</section>
+
+<section id="program">
+<h2>03 · Basic Irvine32 Program Structure</h2>
+<pre>INCLUDE Irvine32.inc
+
+.data
+    num DWORD 10
+
+.code
+main PROC
+
+    mov eax, num
+    call WriteInt
+
+    exit
+main ENDP
+END main</pre>
+<table>
+<tr><th>Part</th><th>Meaning</th></tr>
+<tr><td><code>.data</code></td><td>Defines/stores variables and other data.</td></tr>
+<tr><td><code>.code</code></td><td>Contains executable instructions.</td></tr>
+<tr><td><code>main PROC</code></td><td>Starts the main procedure.</td></tr>
+<tr><td><code>main ENDP</code></td><td>Ends the main procedure.</td></tr>
+<tr><td><code>END main</code></td><td>Tells the assembler the program entry point.</td></tr>
+<tr><td><code>INCLUDE Irvine32.inc</code></td><td>Includes Irvine32 declarations/procedures.</td></tr>
+<tr><td><code>exit</code></td><td>Ends the program.</td></tr>
+</table>
+</section>
+
+<section id="registers">
+<h2>04 · Registers</h2>
+<p>Registers are tiny, extremely fast storage locations inside the CPU.</p>
+<table>
+<tr><th>Register</th><th>Common beginner use</th></tr>
+<tr><td>EAX</td><td>Arithmetic, return values, Irvine32 integer input/output.</td></tr>
+<tr><td>EBX</td><td>General-purpose storage.</td></tr>
+<tr><td>ECX</td><td>Loop counter, especially with <code>LOOP</code>.</td></tr>
+<tr><td>EDX</td><td>General-purpose; Irvine32 uses it for the address passed to <code>WriteString</code>.</td></tr>
+<tr><td>ESI</td><td>Commonly used as an array/memory pointer.</td></tr>
+<tr><td>EDI</td><td>Commonly used as another pointer/index register.</td></tr>
+<tr><td>EBP</td><td>Base/frame pointer; more relevant when procedures/stack frames are studied.</td></tr>
+<tr><td>ESP</td><td>Stack pointer.</td></tr>
+</table>
+
+<h3>Register sizes</h3>
+<p>A 32-bit general-purpose register can be divided into smaller pieces. For EAX:</p>
+<pre>EAX
+ └── AX       (lower 16 bits)
+      ├── AH  (upper 8 bits of AX)
+      └── AL  (lower 8 bits of AX)</pre>
+<p>For the current material, focus mainly on the 32-bit registers such as EAX, EBX, ECX, EDX, ESI and EDI.</p>
+
+<div class="callout green"><strong>Exam habit:</strong> Whenever tracing code, make a small table of register values after every instruction that changes one.</div>
+</section>
+
+<section id="numbers">
+<h2>05 · Number Systems</h2>
+<table>
+<tr><th>System</th><th>Example</th><th>Assembly notation</th></tr>
+<tr><td>Decimal</td><td>10</td><td><code>10</code></td></tr>
+<tr><td>Binary</td><td>10 = 1010₂</td><td><code>1010b</code></td></tr>
+<tr><td>Hexadecimal</td><td>10 = A₁₆</td><td><code>0Ah</code></td></tr>
+</table>
+<div class="callout"><strong>Remember:</strong> <code>10 decimal = 1010 binary = 0Ah hexadecimal</code>.</div>
+</section>
+
+<section id="data">
+<h2>06 · Data Types, Initialization & Directives</h2>
+<h3>Intrinsic data sizes</h3>
+<table>
+<tr><th>Type</th><th>Size</th><th>Typical meaning</th></tr>
+<tr><td>BYTE</td><td>1 byte</td><td>8 bits</td></tr>
+<tr><td>SBYTE</td><td>1 byte</td><td>Signed 8-bit value</td></tr>
+<tr><td>WORD</td><td>2 bytes</td><td>16 bits</td></tr>
+<tr><td>SWORD</td><td>2 bytes</td><td>Signed 16-bit value</td></tr>
+<tr><td>DWORD</td><td>4 bytes</td><td>32 bits</td></tr>
+<tr><td>SDWORD</td><td>4 bytes</td><td>Signed 32-bit value</td></tr>
+<tr><td>QWORD</td><td>8 bytes</td><td>64 bits</td></tr>
+<tr><td>TBYTE</td><td>10 bytes</td><td>80 bits</td></tr>
+</table>
+
+<h3>Simple definitions</h3>
+<pre>.data
+
+a BYTE 10
+b WORD 1000
+c DWORD 100</pre>
+
+<p><code>DWORD</code> is especially common with Irvine32 beginner programs because it matches a 32-bit register such as EAX.</p>
+
+<h3>Multiple initialization</h3>
+<pre>numbers DWORD 10,20,30,40</pre>
+<p>Memory conceptually contains four consecutive DWORD values:</p>
+<pre>[10] [20] [30] [40]</pre>
+
+<h3>DUP</h3>
+<pre>numbers DWORD 5 DUP(0)</pre>
+<p>Means:</p>
+<pre>0, 0, 0, 0, 0</pre>
+<p>Another example:</p>
+<pre>buffer BYTE 10 DUP(?)</pre>
+<p><code>?</code> means the memory is not initialized to a specified value.</p>
+
+<h3>Directives vs instructions</h3>
+<table>
+<tr><th>Directives / data definitions</th><th>CPU instructions</th></tr>
+<tr><td><code>.data</code></td><td><code>MOV</code></td></tr>
+<tr><td><code>.code</code></td><td><code>ADD</code></td></tr>
+<tr><td><code>BYTE</code>, <code>DWORD</code></td><td><code>SUB</code></td></tr>
+<tr><td><code>DUP</code></td><td><code>CMP</code></td></tr>
+<tr><td>Data layout information for the assembler</td><td><code>JMP</code>, <code>JE</code>, <code>LOOP</code>, etc.</td></tr>
+</table>
+</section>
+
+<section id="strings">
+<h2>07 · Strings</h2>
+<p>A string is a sequence of characters. With Irvine32, a null-terminated string is commonly defined like this:</p>
+<pre>.data
+msg BYTE "Hello World",0</pre>
+<p>The memory conceptually contains:</p>
+<pre>H e l l o   W o r l d \0</pre>
+<p>The final <code>0</code> is the null terminator.</p>
+
+<h3>OFFSET and strings</h3>
+<pre>mov edx, OFFSET msg
+call WriteString</pre>
+<p>This does <strong>not</strong> put the characters themselves in EDX. It puts the <strong>address</strong> of the string in EDX. Irvine32's <code>WriteString</code> then uses that address.</p>
+
+<div class="callout red"><strong>Common confusion:</strong> <code>OFFSET msg</code> = address of msg. <code>msg</code> = value stored at msg when used as a memory operand.</div>
+</section>
+
+<section id="irvine">
+<h2>08 · Irvine32 Built-in Procedures</h2>
+<table>
+<tr><th>Procedure</th><th>Purpose</th><th>Important register</th></tr>
+<tr><td><code>ReadInt</code></td><td>Reads a signed integer from the user.</td><td>Returns value in EAX.</td></tr>
+<tr><td><code>WriteInt</code></td><td>Prints a signed integer.</td><td>Uses EAX.</td></tr>
+<tr><td><code>WriteDec</code></td><td>Prints an unsigned decimal integer.</td><td>Uses EAX.</td></tr>
+<tr><td><code>ReadChar</code></td><td>Reads a character.</td><td>Returns character in AL.</td></tr>
+<tr><td><code>WriteChar</code></td><td>Prints a character.</td><td>Uses AL.</td></tr>
+<tr><td><code>WriteString</code></td><td>Prints a null-terminated string.</td><td>EDX = address of string.</td></tr>
+<tr><td><code>Crlf</code></td><td>Prints a new line.</td><td>None required.</td></tr>
+<tr><td><code>DumpRegs</code></td><td>Displays register/flag information for debugging.</td><td>Useful while tracing.</td></tr>
+</table>
+
+<h3>Typical input/output patterns</h3>
+<pre>; Read an integer
+call ReadInt
+; EAX now contains the input
+
+; Print EAX
+call WriteInt
+
+; Print a string
+mov edx, OFFSET msg
+call WriteString
+
+; New line
+call Crlf
+
+; Show registers
+call DumpRegs</pre>
+</section>
+
+
+<section id="input">
+<h2>09 · Input: Integer, String & Character</h2>
+<p class="lead">Irvine32 provides different input procedures for different kinds of values. The key distinction is that <code>ReadInt</code>/<code>ReadDec</code>/<code>ReadHex</code> return a value in EAX, <code>ReadChar</code> returns a character in AL, and <code>ReadString</code> stores text in a buffer.</p>
+<div class="callout blue"><strong>Remember:</strong> <code>ReadInt → EAX</code> · <code>ReadDec → EAX</code> · <code>ReadHex → EAX</code> · <code>ReadChar → AL</code> · <code>ReadString → EDX = buffer, ECX = size, EAX = character count</code></div>
+<table>
+<tr><th>Input</th><th>Procedure</th><th>Registers / result</th></tr>
+<tr><td>Signed decimal integer</td><td><code>ReadInt</code></td><td>EAX = integer typed</td></tr>
+<tr><td>Unsigned decimal integer</td><td><code>ReadDec</code></td><td>EAX = unsigned integer typed</td></tr>
+<tr><td>Hexadecimal integer</td><td><code>ReadHex</code></td><td>EAX = value typed</td></tr>
+<tr><td>String</td><td><code>ReadString</code></td><td>EDX = buffer address, ECX = buffer size, EAX = characters read</td></tr>
+<tr><td>Single character</td><td><code>ReadChar</code></td><td>AL = character typed; key is not echoed</td></tr>
+</table>
+
+<h3>1. Read an Integer — ReadInt</h3>
+<pre>INCLUDE Irvine32.inc
+
+.data
+    prompt BYTE "Enter an integer: ",0
+
+.code
+main PROC
+    mov edx, OFFSET prompt
+    call WriteString
+
+    call ReadInt          ; EAX = integer entered
+    call WriteInt         ; prints EAX
+    call Crlf
+
+    exit
+main ENDP
+END main</pre>
+<div class="callout green"><strong>Pattern:</strong> <code>call ReadInt</code> → EAX contains the signed decimal integer. If you need to keep it, save it: <code>mov age, eax</code>.</div>
+
+<h3>2. Read an Unsigned Decimal Integer — ReadDec</h3>
+<pre>mov edx, OFFSET prompt
+call WriteString
+
+call ReadDec          ; EAX = unsigned decimal value
+call WriteDec
+call Crlf</pre>
+<p>Use <code>ReadDec</code> when the input is an unsigned 32-bit decimal integer.</p>
+
+<h3>3. Read a Hexadecimal Value — ReadHex</h3>
+<pre>mov edx, OFFSET prompt
+call WriteString
+
+call ReadHex          ; EAX = hexadecimal value
+call WriteHex
+call Crlf</pre>
+<p>The value entered is returned in EAX and can then be displayed with <code>WriteHex</code>.</p>
+
+<h3>4. Read a String — ReadString</h3>
+<pre>INCLUDE Irvine32.inc
+
+.data
+    prompt   BYTE "Enter your name: ",0
+    userName BYTE 31 DUP(0)     ; up to 30 characters + null
+
+.code
+main PROC
+    mov edx, OFFSET prompt
+    call WriteString
+
+    mov edx, OFFSET userName    ; address where text will be stored
+    mov ecx, SIZEOF userName    ; buffer size
+    call ReadString             ; EAX = number of characters read
+
+    call Crlf
+    mov edx, OFFSET userName
+    call WriteString
+    call Crlf
+
+    exit
+main ENDP
+END main</pre>
+<table>
+<tr><th>Register</th><th>What it means for ReadString</th></tr>
+<tr><td>EDX</td><td>Address of the buffer where the typed string will be stored.</td></tr>
+<tr><td>ECX</td><td>Size of the buffer.</td></tr>
+<tr><td>EAX</td><td>Number of characters read.</td></tr>
+</table>
+<div class="callout green"><strong>String-input pattern:</strong><pre style="margin:8px 0 0">mov edx, OFFSET buffer
+mov ecx, SIZEOF buffer
+call ReadString</pre></div>
+<p>The Lab 06 manual uses <code>BYTE 31 DUP(0)</code> for a buffer that can hold up to 30 characters plus the null terminator. <code>ReadString</code> writes a null byte after the entered text, so the buffer can be printed with <code>WriteString</code>.</p>
+
+<h3>5. Read a Single Character — ReadChar</h3>
+<pre>INCLUDE Irvine32.inc
+
+.data
+    prompt BYTE "Press a key: ",0
+
+.code
+main PROC
+    mov edx, OFFSET prompt
+    call WriteString
+
+    call ReadChar         ; AL = character typed
+    call Crlf
+
+    call WriteChar        ; display AL
+    call Crlf
+
+    exit
+main ENDP
+END main</pre>
+<div class="callout red"><strong>Important:</strong> <code>ReadChar</code> does not echo the key. If you want to display it, use <code>WriteChar</code>. To preserve the character, save AL, for example <code>mov bl, al</code>.</div>
+
+<h3>6. Complete Example — String + Integer + Character</h3>
+<p>This combines the three main input types in the same pattern used by the Lab 06 manual.</p>
+<pre>INCLUDE Irvine32.inc
+
+.data
+    pName    BYTE "Enter your name : ",0
+    pAge     BYTE "Enter your age : ",0
+    pKey     BYTE "Press any key : ",0
+    mHello   BYTE "Hello, ",0
+    mNext    BYTE "Next year you will be ",0
+    mKey     BYTE "You pressed : ",0
+
+    userName BYTE 31 DUP(0)
+    age      DWORD ?
+
+.code
+main PROC
+    ; ----- string -----
+    mov edx, OFFSET pName
+    call WriteString
+    mov edx, OFFSET userName
+    mov ecx, SIZEOF userName
+    call ReadString
+
+    ; ----- integer -----
+    mov edx, OFFSET pAge
+    call WriteString
+    call ReadInt
+    mov age, eax
+
+    ; ----- character -----
+    mov edx, OFFSET pKey
+    call WriteString
+    call ReadChar
+    call Crlf
+    mov bl, al
+
+    ; ----- display results -----
+    call Crlf
+    mov edx, OFFSET mHello
+    call WriteString
+    mov edx, OFFSET userName
+    call WriteString
+    call Crlf
+
+    mov edx, OFFSET mNext
+    call WriteString
+    mov eax, age
+    inc eax
+    call WriteDec
+    call Crlf
+
+    mov edx, OFFSET mKey
+    call WriteString
+    mov al, bl
+    call WriteChar
+    call Crlf
+
+    exit
+main ENDP
+END main</pre>
+<h4>Dry run</h4>
+<table>
+<tr><th>Step</th><th>Instruction</th><th>Result</th></tr>
+<tr><td>1</td><td><code>mov edx, OFFSET userName</code></td><td>EDX points to the string buffer.</td></tr>
+<tr><td>2</td><td><code>mov ecx, SIZEOF userName</code></td><td>ECX contains the buffer size.</td></tr>
+<tr><td>3</td><td><code>call ReadString</code></td><td>Text goes into the buffer; EAX gets character count.</td></tr>
+<tr><td>4</td><td><code>call ReadInt</code></td><td>EAX gets the entered age.</td></tr>
+<tr><td>5</td><td><code>mov age, eax</code></td><td>Age is saved in memory.</td></tr>
+<tr><td>6</td><td><code>call ReadChar</code></td><td>AL gets the pressed key.</td></tr>
+<tr><td>7</td><td><code>mov bl, al</code></td><td>The key is preserved in BL.</td></tr>
+</table>
+
+<h3>7. Input vs Output — Quick Comparison</h3>
+<table>
+<tr><th>Type</th><th>Input</th><th>Output</th></tr>
+<tr><td>Signed integer</td><td><code>ReadInt → EAX</code></td><td><code>WriteInt ← EAX</code></td></tr>
+<tr><td>Unsigned decimal</td><td><code>ReadDec → EAX</code></td><td><code>WriteDec ← EAX</code></td></tr>
+<tr><td>Hexadecimal</td><td><code>ReadHex → EAX</code></td><td><code>WriteHex ← EAX</code></td></tr>
+<tr><td>Character</td><td><code>ReadChar → AL</code></td><td><code>WriteChar ← AL</code></td></tr>
+<tr><td>String</td><td><code>ReadString → buffer</code></td><td><code>WriteString ← EDX = address</code></td></tr>
+</table>
+<div class="callout"><strong>Exam memory trick:</strong><br><code>ReadInt / ReadDec / ReadHex → EAX</code><br><code>ReadChar → AL</code><br><code>ReadString → EDX + ECX, count in EAX</code><br><code>WriteString → EDX</code></div>
+</section>
+
+<section id="transfer">
+<h2>10 · Data Transfer Instructions</h2>
+<h3>MOV</h3>
+<pre>mov destination, source</pre>
+<p>Example:</p>
+<pre>mov eax, 10
+mov ebx, eax</pre>
+<p>Result:</p>
+<pre>EAX = 10
+EBX = 10</pre>
+<p><strong>MOV copies; it does not remove the source value.</strong></p>
+
+<h3>Memory-to-memory warning</h3>
+<p>For ordinary MOV usage, you generally cannot directly copy one memory variable to another:</p>
+<pre>; Not valid as a normal memory-to-memory MOV:
+mov num1, num2</pre>
+<p>Use a register in between:</p>
+<pre>mov eax, num2
+mov num1, eax</pre>
+
+<h3>XCHG</h3>
+<pre>mov eax, 10
+mov ebx, 20
+xchg eax, ebx</pre>
+<p>Afterward:</p>
+<pre>EAX = 20
+EBX = 10</pre>
+
+<h3>MOVZX</h3>
+<p><strong>Move with Zero Extension:</strong> extra upper bits are filled with zero.</p>
+<pre>mov al, 5
+movzx eax, al</pre>
+<p>Conceptually: EAX becomes <code>00000005h</code>.</p>
+
+<h3>MOVSX</h3>
+<p><strong>Move with Sign Extension:</strong> preserves the sign when a smaller signed value is extended to a larger register.</p>
+<pre>movsx eax, al</pre>
+
+<div class="callout"><strong>Memory trick:</strong> MOVZX → zero-fill. MOVSX → sign-preserve.</div>
+</section>
+
+<section id="arithmetic">
+<h2>11 · Arithmetic Instructions</h2>
+<table>
+<tr><th>Instruction</th><th>Meaning</th><th>Example</th></tr>
+<tr><td><code>ADD</code></td><td>Destination = destination + source</td><td><code>add eax, ebx</code></td></tr>
+<tr><td><code>SUB</code></td><td>Destination = destination − source</td><td><code>sub eax, ebx</code></td></tr>
+<tr><td><code>INC</code></td><td>Add 1</td><td><code>inc eax</code></td></tr>
+<tr><td><code>DEC</code></td><td>Subtract 1</td><td><code>dec eax</code></td></tr>
+<tr><td><code>NEG</code></td><td>Change sign</td><td><code>neg eax</code></td></tr>
+</table>
+
+<pre>mov eax, 10
+mov ebx, 20
+add eax, ebx      ; EAX = 30
+
+sub eax, 5       ; EAX = 25
+inc eax           ; EAX = 26
+dec eax           ; EAX = 25
+neg eax           ; EAX = -25</pre>
+</section>
+
+<section id="flags">
+<h2>12 · Flags</h2>
+<p>Flags are 1-bit indicators maintained by the CPU. Arithmetic and comparison instructions can change them, and conditional jumps can use them.</p>
+<table>
+<tr><th>Flag</th><th>Name</th><th>Beginner interpretation</th></tr>
+<tr><td>ZF</td><td>Zero Flag</td><td>1 when the result is zero.</td></tr>
+<tr><td>CF</td><td>Carry Flag</td><td>Important for unsigned carry/borrow.</td></tr>
+<tr><td>SF</td><td>Sign Flag</td><td>Reflects the sign bit of the result.</td></tr>
+<tr><td>OF</td><td>Overflow Flag</td><td>Important for signed overflow.</td></tr>
+</table>
+
+<h3>ZF example</h3>
+<pre>mov eax, 10
+sub eax, 10</pre>
+<p>The result is zero, so:</p>
+<pre>ZF = 1</pre>
+
+<h3>Unsigned vs signed overflow</h3>
+<div class="grid">
+<div class="card"><h3>CF</h3><p>Think mainly about <strong>unsigned</strong> carry/borrow.</p></div>
+<div class="card"><h3>OF</h3><p>Think mainly about <strong>signed</strong> overflow.</p></div>
+</div>
+</section>
+
+<section id="cmp">
+<h2>12 · CMP and TEST</h2>
+<h3>CMP</h3>
+<p><code>CMP destination, source</code> conceptually performs:</p>
+<pre>destination - source</pre>
+<p>but does <strong>not store the subtraction result</strong>. It changes flags.</p>
+
+<pre>mov eax, 10
+cmp eax, 10</pre>
+<p>Conceptually:</p>
+<pre>10 - 10 = 0
+ZF = 1
+EAX remains 10</pre>
+
+<h3>TEST</h3>
+<pre>test eax, eax</pre>
+<p>Conceptually performs a bitwise AND without storing the result. It is commonly used to check whether a value is zero or to inspect bits.</p>
+
+<div class="callout blue"><strong>Core conditional pattern:</strong><br>
+<code>cmp eax, ebx</code> → set flags based on the comparison → conditional jump reads those flags.
+</div>
+</section>
+
+<section id="jumps">
+<h2>14 · Jumps and Conditional Processing</h2>
+<h3>Unconditional JMP</h3>
+<pre>jmp label</pre>
+<p>Always transfers execution to <code>label</code>.</p>
+<pre>mov eax, 10
+jmp skip
+mov eax, 50       ; skipped
+
+skip:</pre>
+
+<h3>Labels</h3>
+<pre>start:
+    inc eax</pre>
+<p>A label marks a location in code that a jump can target.</p>
+
+<h3>Conditional jumps</h3>
+<table>
+<tr><th>Unsigned</th><th>Signed</th><th>Meaning</th></tr>
+<tr><td><code>JE</code></td><td><code>JE</code></td><td>Equal</td></tr>
+<tr><td><code>JNE</code></td><td><code>JNE</code></td><td>Not equal</td></tr>
+<tr><td><code>JA</code></td><td><code>JG</code></td><td>Above / greater</td></tr>
+<tr><td><code>JAE</code></td><td><code>JGE</code></td><td>Above or equal / greater or equal</td></tr>
+<tr><td><code>JB</code></td><td><code>JL</code></td><td>Below / less</td></tr>
+<tr><td><code>JBE</code></td><td><code>JLE</code></td><td>Below or equal / less or equal</td></tr>
+</table>
+
+<div class="callout red"><strong>Important:</strong> JA/JB/JAE/JBE are for unsigned comparisons. JG/JL/JGE/JLE are for signed comparisons. JE/JNE work for equality/inequality.</div>
+
+<h3>IF statement</h3>
+<p>C++:</p>
+<pre>if (eax == ebx)
+{
+    // code
+}</pre>
+<p>Assembly:</p>
+<pre>cmp eax, ebx
+je equal
+
+equal:
+    ; code</pre>
+
+<h3>IF-ELSE</h3>
+<pre>cmp eax, ebx
+je equal
+
+; ELSE code
+jmp done
+
+equal:
+    ; IF code
+
+done:</pre>
+
+<h3>Greater of two numbers</h3>
+<pre>mov eax, 20
+mov ebx, 30
+
+cmp eax, ebx
+jg eaxGreater
+
+mov eax, ebx
+
+eaxGreater:</pre>
+<p>After this, EAX contains the greater value for the signed comparison shown.</p>
+
+<h3>Positive / negative / zero</h3>
+<pre>cmp eax, 0
+jg positive
+jl negative
+je zero</pre>
+
+<h3>Even / odd trick</h3>
+<pre>test eax, 1
+jz even</pre>
+<p>If the least significant bit is 0, the number is even. If it is 1, the number is odd.</p>
+</section>
+
+<section id="loops">
+<h2>15 · Loops</h2>
+<h3>LOOP instruction</h3>
+<p><code>LOOP label</code> automatically uses ECX:</p>
+<pre>ECX = ECX - 1
+if ECX != 0
+    jump to label</pre>
+
+<p>Basic pattern:</p>
+<pre>mov ecx, 5
+
+L1:
+    ; body
+    loop L1</pre>
+<p>The body executes 5 times.</p>
+
+<h3>Print 1 to 5</h3>
+<pre>mov ecx, 5
+mov eax, 1
+
+L1:
+    call WriteInt
+    call Crlf
+
+    inc eax
+    loop L1</pre>
+
+<h3>Trace</h3>
+<table>
+<tr><th>Iteration</th><th>Printed EAX</th><th>ECX after LOOP</th></tr>
+<tr><td>1</td><td>1</td><td>4</td></tr>
+<tr><td>2</td><td>2</td><td>3</td></tr>
+<tr><td>3</td><td>3</td><td>2</td></tr>
+<tr><td>4</td><td>4</td><td>1</td></tr>
+<tr><td>5</td><td>5</td><td>0 → stop</td></tr>
+</table>
+
+<div class="callout red"><strong>LOOP trap:</strong> Do not accidentally overwrite ECX inside the loop. LOOP depends on ECX.</div>
+
+<h3>Loop using CMP + JMP</h3>
+<pre>mov eax, 1
+
+L1:
+    cmp eax, 5
+    jg done
+
+    call WriteInt
+    call Crlf
+
+    inc eax
+    jmp L1
+
+done:</pre>
+
+<h3>WHILE pattern</h3>
+<pre>L1:
+    cmp eax, 5
+    jge done
+
+    inc eax
+    jmp L1
+
+done:</pre>
+<p>Condition is checked before the body.</p>
+
+<h3>DO-WHILE pattern</h3>
+<pre>L1:
+    inc eax
+    cmp eax, 5
+    jl L1</pre>
+<p>The body executes once before the condition is checked.</p>
+</section>
+
+<section id="arrays">
+<h2>16 · Arrays</h2>
+<h3>Declaring an array</h3>
+<pre>.data
+arr DWORD 10,20,30,40,50</pre>
+<p>Conceptually:</p>
+<pre>Index:    0    1    2    3    4
+        ┌────┬────┬────┬────┬────┐
+arr →   │ 10 │ 20 │ 30 │ 40 │ 50 │
+        └────┴────┴────┴────┴────┘</pre>
+
+<p>Because each element is a DWORD (4 bytes):</p>
+<table>
+<tr><th>Element</th><th>Byte offset</th></tr>
+<tr><td>arr[0]</td><td>0</td></tr>
+<tr><td>arr[1]</td><td>4</td></tr>
+<tr><td>arr[2]</td><td>8</td></tr>
+<tr><td>arr[3]</td><td>12</td></tr>
+<tr><td>arr[4]</td><td>16</td></tr>
+</table>
+
+<h3>Direct array access</h3>
+<pre>mov eax, arr[4]</pre>
+<p>Because a DWORD is 4 bytes, offset 4 refers to the second DWORD element.</p>
+
+<h3>Array + loop</h3>
+<pre>.data
+arr DWORD 10,20,30,40,50
+
+.code
+mov esi, OFFSET arr
+mov ecx, LENGTHOF arr
+
+L1:
+    mov eax, [esi]
+    call WriteInt
+    call Crlf
+
+    add esi, 4
+    loop L1</pre>
+<p>Output:</p>
+<pre>10
+20
+30
+40
+50</pre>
+</section>
+
+<section id="indirect">
+<h2>17 · Indirect Addressing</h2>
+<p>Indirect addressing means a register contains a memory address and you access the value at that address.</p>
+
+<h3>Three expressions to distinguish</h3>
+<pre>.data
+num DWORD 50
+
+mov esi, OFFSET num
+mov eax, num
+mov eax, [esi]</pre>
+<table>
+<tr><th>Code</th><th>Meaning</th></tr>
+<tr><td><code>mov esi, OFFSET num</code></td><td>ESI gets the address of num.</td></tr>
+<tr><td><code>mov eax, num</code></td><td>EAX gets the value stored in num.</td></tr>
+<tr><td><code>mov eax, [esi]</code></td><td>EAX gets the value stored at the memory address contained in ESI.</td></tr>
+</table>
+
+<div class="callout green"><strong>Best mental model:</strong> ESI is a finger pointing at memory. <code>[ESI]</code> means “give me what the finger is pointing at.”</div>
+
+<h3>Traversing an array with a pointer</h3>
+<pre>mov esi, OFFSET arr
+mov ecx, LENGTHOF arr
+
+L1:
+    mov eax, [esi]
+
+    ; use EAX
+
+    add esi, TYPE arr
+    loop L1</pre>
+<p>For a DWORD array, <code>TYPE arr</code> is 4, so ESI advances by one element each iteration.</p>
+</section>
+
+<section id="operators">
+<h2>17 · Data-Related Operators</h2>
+<table>
+<tr><th>Operator</th><th>Meaning</th><th>Example</th><th>Result for DWORD arr with 5 elements</th></tr>
+<tr><td><code>TYPE</code></td><td>Size of one element in bytes</td><td><code>TYPE arr</code></td><td>4</td></tr>
+<tr><td><code>LENGTHOF</code></td><td>Number of elements</td><td><code>LENGTHOF arr</code></td><td>5</td></tr>
+<tr><td><code>SIZEOF</code></td><td>Total size in bytes</td><td><code>SIZEOF arr</code></td><td>20</td></tr>
+<tr><td><code>OFFSET</code></td><td>Address of a variable/label</td><td><code>OFFSET arr</code></td><td>Memory address</td></tr>
+<tr><td><code>PTR</code></td><td>Specifies how memory should be treated/accessed</td><td><code>BYTE PTR [esi]</code></td><td>Access as byte</td></tr>
+</table>
+
+<h3>PTR examples</h3>
+<pre>mov BYTE PTR [esi], 10
+mov WORD PTR [esi], 1000
+mov DWORD PTR [esi], 100000</pre>
+
+<h3>Preferred array loop</h3>
+<pre>.data
+arr DWORD 10,20,30,40
+
+.code
+mov esi, OFFSET arr
+mov ecx, LENGTHOF arr
+
+L1:
+    mov eax, [esi]
+    call WriteInt
+    call Crlf
+
+    add esi, TYPE arr
+    loop L1</pre>
+<div class="callout"><strong>Why TYPE is better than hardcoding 4:</strong> If the array changes from DWORD to WORD, <code>TYPE arr</code> automatically changes from 4 to 2.</div>
+</section>
+
+<section id="debugging">
+<h2>18 · Visual Studio Debugging</h2>
+<p>Debugging is not just finding syntax errors. For Assembly, it is a way to understand what the CPU is doing.</p>
+<h3>Breakpoint</h3>
+<p>Click beside a source line to stop execution there.</p>
+<h3>Step Over — F10</h3>
+<p>Executes the current line and moves to the next without entering a called procedure.</p>
+<h3>Step Into — F11</h3>
+<p>Steps into a procedure/function when applicable.</p>
+<h3>Watch registers</h3>
+<p>During debugging, inspect values such as:</p>
+<pre>EAX
+EBX
+ECX
+EDX
+ESI
+EDI
+EIP
+ESP
+EFLAGS</pre>
+
+<h3>Tracing example</h3>
+<pre>mov eax, 5
+mov ebx, 10
+add eax, ebx</pre>
+<table>
+<tr><th>After instruction</th><th>EAX</th><th>EBX</th></tr>
+<tr><td>Start</td><td>unknown/previous</td><td>unknown/previous</td></tr>
+<tr><td><code>mov eax,5</code></td><td>5</td><td>unchanged</td></tr>
+<tr><td><code>mov ebx,10</code></td><td>5</td><td>10</td></tr>
+<tr><td><code>add eax,ebx</code></td><td>15</td><td>10</td></tr>
+</table>
+
+<div class="callout blue"><strong>Exam skill:</strong> Be able to manually dry-run code and predict register values, memory values, flags and loop counts.</div>
+</section>
+
+<section id="patterns">
+<h2>19 · High-Value Exam Patterns</h2>
+
+<h3>Pattern A — Read integer</h3>
+<pre>call ReadInt
+; EAX = user input</pre>
+
+<h3>Pattern B — Print integer</h3>
+<pre>call WriteInt
+call Crlf</pre>
+
+<h3>Pattern C — Print string</h3>
+<pre>mov edx, OFFSET msg
+call WriteString</pre>
+
+<h3>Pattern D — Compare two values</h3>
+<pre>cmp eax, ebx
+je equal
+jg greater
+jl less</pre>
+
+<h3>Pattern E — IF/ELSE</h3>
+<pre>cmp eax, ebx
+je equal
+
+; else
+jmp done
+
+equal:
+    ; equal case
+
+done:</pre>
+
+<h3>Pattern F — Fixed-count loop</h3>
+<pre>mov ecx, 5
+
+L1:
+    ; body
+    loop L1</pre>
+
+<h3>Pattern G — Array pointer traversal</h3>
+<pre>mov esi, OFFSET arr
+mov ecx, LENGTHOF arr
+
+L1:
+    mov eax, [esi]
+
+    ; process EAX
+
+    add esi, TYPE arr
+    loop L1</pre>
+
+<h3>Pattern H — Maximum of array</h3>
+<pre>mov esi, OFFSET arr
+mov eax, [esi]
+add esi, TYPE arr
+
+mov ecx, LENGTHOF arr - 1
+
+L1:
+    cmp eax, [esi]
+    jge skip
+
+    mov eax, [esi]
+
+skip:
+    add esi, TYPE arr
+    loop L1</pre>
+<p>At the end, EAX contains the largest value.</p>
+
+<h3>Pattern I — Minimum of array</h3>
+<pre>mov esi, OFFSET arr
+mov eax, [esi]
+add esi, TYPE arr
+
+mov ecx, LENGTHOF arr - 1
+
+L1:
+    cmp eax, [esi]
+    jle skip
+
+    mov eax, [esi]
+
+skip:
+    add esi, TYPE arr
+    loop L1</pre>
+<p>At the end, EAX contains the smallest value.</p>
+
+<h3>Pattern J — Sum 1 to 5</h3>
+<pre>mov ecx, 5
+mov eax, 1
+mov ebx, 0
+
+L1:
+    add ebx, eax
+    inc eax
+    loop L1
+
+; EBX = 15</pre>
+</section>
+
+<section id="examples">
+<h2>20 · Complete Worked Examples</h2>
+
+<h3>Example 1 — Add two variables and print result</h3>
+<pre>INCLUDE Irvine32.inc
+
+.data
+num1 DWORD 10
+num2 DWORD 20
+msg BYTE "Result: ",0
+
+.code
+main PROC
+
+    mov eax, num1
+    add eax, num2
+
+    mov edx, OFFSET msg
+    call WriteString
+
+    call WriteInt
+    call Crlf
+
+    exit
+main ENDP
+END main</pre>
+<p>Execution idea:</p>
+<pre>mov eax, num1       → EAX = 10
+add eax, num2       → EAX = 30
+mov edx, OFFSET msg → EDX = address of "Result: "
+WriteString         → prints Result:
+WriteInt            → prints EAX</pre>
+
+<h3>Example 2 — Swap values</h3>
+<pre>mov eax, 10
+mov ebx, 20
+
+xchg eax, ebx
+
+; EAX = 20
+; EBX = 10</pre>
+
+<h3>Example 3 — Largest of two numbers</h3>
+<pre>mov eax, 20
+mov ebx, 30
+
+cmp eax, ebx
+jg eaxGreater
+
+mov eax, ebx
+
+eaxGreater:
+; EAX = 30</pre>
+
+<h3>Example 4 — Print 1 through 5</h3>
+<pre>mov ecx, 5
+mov eax, 1
+
+L1:
+    call WriteInt
+    call Crlf
+
+    inc eax
+    loop L1</pre>
+
+<h3>Example 5 — Array traversal</h3>
+<pre>INCLUDE Irvine32.inc
+
+.data
+arr DWORD 10,20,30,40,50
+
+.code
+main PROC
+
+    mov esi, OFFSET arr
+    mov ecx, LENGTHOF arr
+
+L1:
+    mov eax, [esi]
+    call WriteInt
+    call Crlf
+
+    add esi, TYPE arr
+    loop L1
+
+    exit
+main ENDP
+END main</pre>
+
+<h3>Example 6 — Largest value in an array</h3>
+<pre>INCLUDE Irvine32.inc
+
+.data
+arr DWORD 10,45,20,80,35
+msg BYTE "Largest = ",0
+
+.code
+main PROC
+
+    mov esi, OFFSET arr
+    mov eax, [esi]
+
+    add esi, TYPE arr
+
+    mov ecx, LENGTHOF arr - 1
+
+L1:
+    cmp eax, [esi]
+    jge skip
+
+    mov eax, [esi]
+
+skip:
+    add esi, TYPE arr
+    loop L1
+
+    mov edx, OFFSET msg
+    call WriteString
+
+    call WriteInt
+    call Crlf
+
+    exit
+main ENDP
+END main</pre>
+<p>Result:</p>
+<pre>Largest = +80</pre>
+<p>This example combines <strong>array + OFFSET + ESI + indirect addressing + TYPE + LENGTHOF + ECX + CMP + JGE + LOOP + Irvine32 output</strong>.</p>
+
+<h3>Example 7 — Smallest value in an array</h3>
+<pre>mov esi, OFFSET arr
+mov eax, [esi]
+
+add esi, TYPE arr
+mov ecx, LENGTHOF arr - 1
+
+L1:
+    cmp eax, [esi]
+    jle skip
+
+    mov eax, [esi]
+
+skip:
+    add esi, TYPE arr
+    loop L1</pre>
+</section>
+
+<section id="cheat">
+<h2>21 · One-Page Cheat Sheet</h2>
+
+<div class="grid">
+<div class="card">
+<h3>Program</h3>
+<pre>INCLUDE Irvine32.inc
+
+.data
+    ; variables
+
+.code
+main PROC
+    ; instructions
+    exit
+main ENDP
+END main</pre>
+</div>
+
+<div class="card">
+<h3>Registers</h3>
+<pre>EAX → arithmetic / I/O
+EBX → general purpose
+ECX → LOOP counter
+EDX → string address for WriteString
+ESI → array pointer
+EDI → pointer/index</pre>
+</div>
+</div>
+
+<h3>Data</h3>
+<pre>BYTE   = 1 byte
+WORD   = 2 bytes
+DWORD  = 4 bytes
+QWORD  = 8 bytes
+
+arr DWORD 10,20,30
+arr DWORD 5 DUP(0)</pre>
+
+<h3>Irvine32</h3>
+<pre>call ReadInt       ; EAX = input
+call WriteInt      ; prints EAX
+call WriteDec      ; unsigned decimal
+call ReadChar      ; AL = input character
+call WriteChar     ; prints AL
+mov edx, OFFSET msg
+call WriteString
+call Crlf
+call DumpRegs</pre>
+
+<h3>Transfer</h3>
+<pre>mov eax, 10
+mov ebx, eax
+
+xchg eax, ebx
+
+movzx eax, al
+movsx eax, al</pre>
+
+<h3>Arithmetic</h3>
+<pre>add eax, ebx
+sub eax, ebx
+inc eax
+dec eax
+neg eax</pre>
+
+<h3>Addressing</h3>
+<pre>mov esi, OFFSET num   ; address
+mov eax, num          ; value
+mov eax, [esi]        ; value at address in ESI</pre>
+
+<h3>Operators</h3>
+<pre>TYPE arr       → bytes per element
+LENGTHOF arr   → number of elements
+SIZEOF arr     → total bytes
+OFFSET arr     → address
+PTR            → specify access size</pre>
+
+<h3>Comparison & jumps</h3>
+<pre>cmp eax, ebx
+
+je   label    ; equal
+jne  label    ; not equal
+
+jg   label    ; signed >
+jl   label    ; signed <
+jge  label    ; signed >=
+jle  label    ; signed <=
+
+ja   label    ; unsigned >
+jb   label    ; unsigned <
+jae  label    ; unsigned >=
+jbe  label    ; unsigned <=
+
+jmp  label    ; unconditional</pre>
+
+<h3>Loop</h3>
+<pre>mov ecx, 5
+
+L1:
+    ; body
+    loop L1</pre>
+
+<h3>Array traversal</h3>
+<pre>mov esi, OFFSET arr
+mov ecx, LENGTHOF arr
+
+L1:
+    mov eax, [esi]
+
+    add esi, TYPE arr
+    loop L1</pre>
+</section>
+
+<section id="checklist">
+<h2>22 · Final Exam Checklist</h2>
+<p class="lead">If you can confidently explain and code every item below without looking at the answer, your foundation is in good shape.</p>
+<div class="checklist card">
+<label><input type="checkbox"> I can explain what a register is.</label>
+<label><input type="checkbox"> I know the basic purpose of EAX, EBX, ECX, EDX, ESI and EDI.</label>
+<label><input type="checkbox"> I understand 8-bit, 16-bit and 32-bit register portions.</label>
+<label><input type="checkbox"> I can recognize decimal, binary and hexadecimal literals.</label>
+<label><input type="checkbox"> I understand .data, .code, PROC, ENDP and END.</label>
+<label><input type="checkbox"> I know BYTE, WORD and DWORD sizes.</label>
+<label><input type="checkbox"> I understand multiple initialization.</label>
+<label><input type="checkbox"> I understand DUP and ?.</label>
+<label><input type="checkbox"> I can define and print a string.</label>
+<label><input type="checkbox"> I understand OFFSET as an address.</label>
+<label><input type="checkbox"> I can use ReadInt and WriteInt.</label>
+<label><input type="checkbox"> I can use WriteString with EDX.</label>
+<label><input type="checkbox"> I understand MOV and XCHG.</label>
+<label><input type="checkbox"> I know the difference between MOVZX and MOVSX.</label>
+<label><input type="checkbox"> I can use ADD, SUB, INC, DEC and NEG.</label>
+<label><input type="checkbox"> I know what ZF, CF, SF and OF generally indicate.</label>
+<label><input type="checkbox"> I understand CMP does a conceptual subtraction but does not store the result.</label>
+<label><input type="checkbox"> I understand JMP and labels.</label>
+<label><input type="checkbox"> I know JE and JNE.</label>
+<label><input type="checkbox"> I know signed vs unsigned conditional jumps.</label>
+<label><input type="checkbox"> I can write an IF/ELSE in Assembly.</label>
+<label><input type="checkbox"> I understand ECX + LOOP.</label>
+<label><input type="checkbox"> I can write a counter loop using CMP/JMP.</label>
+<label><input type="checkbox"> I can declare an array.</label>
+<label><input type="checkbox"> I understand DWORD array offsets.</label>
+<label><input type="checkbox"> I understand [ESI] as indirect addressing.</label>
+<label><input type="checkbox"> I know TYPE, LENGTHOF and SIZEOF.</label>
+<label><input type="checkbox"> I can traverse an array using ESI and LOOP.</label>
+<label><input type="checkbox"> I can find max/min in an array.</label>
+<label><input type="checkbox"> I can dry-run Assembly and predict register values.</label>
+</div>
+
+<div class="callout">
+<strong>Most important chain to master before the exam:</strong>
+<div class="flow">
+<span>Registers</span><b class="arrow">→</b>
+<span>Memory</span><b class="arrow">→</b>
+<span>OFFSET / [ ]</span><b class="arrow">→</b>
+<span>Arrays</span><b class="arrow">→</b>
+<span>Flags</span><b class="arrow">→</b>
+<span>CMP</span><b class="arrow">→</b>
+<span>Jumps</span><b class="arrow">→</b>
+<span>Loops</span>
+</div>
+</div>
+</section>
+
+<section id="practice">
+<h2>24 · Quick Practice</h2>
+<p>Try these without looking back at the examples.</p>
+
+<details class="quiz">
+<summary>1. What are the final values of EAX and EBX?</summary>
+<div><pre>mov eax, 10
+mov ebx, 20
+xchg eax, ebx
+add eax, 5
+sub ebx, 3</pre><p><strong>Answer:</strong> EAX = 25, EBX = 7.</p></div>
+</details>
+
+<details class="quiz">
+<summary>2. What does OFFSET do?</summary>
+<div><p><strong>Answer:</strong> It gives the memory address of the specified variable/label. Example: <code>mov esi, OFFSET arr</code> makes ESI point to the first element.</p></div>
+</details>
+
+<details class="quiz">
+<summary>3. What is the difference between mov eax, num and mov eax, [esi]?</summary>
+<div><p><code>mov eax, num</code> reads the value of the memory variable named num. <code>mov eax, [esi]</code> reads the value at the memory address stored in ESI.</p></div>
+</details>
+
+<details class="quiz">
+<summary>4. If arr is DWORD with 5 elements, what are TYPE, LENGTHOF and SIZEOF?</summary>
+<div><p><strong>TYPE = 4, LENGTHOF = 5, SIZEOF = 20.</strong></p></div>
+</details>
+
+<details class="quiz">
+<summary>5. What does LOOP use automatically?</summary>
+<div><p><strong>ECX.</strong> LOOP decrements ECX and jumps back if ECX is not zero.</p></div>
+</details>
+
+<details class="quiz">
+<summary>6. What does cmp eax, ebx actually do?</summary>
+<div><p>It conceptually computes <code>EAX - EBX</code> to set flags, but does not store the subtraction result in EAX or EBX.</p></div>
+</details>
+
+<details class="quiz">
+<summary>7. Which jump means signed greater-than?</summary>
+<div><p><strong>JG.</strong> Unsigned greater-than is <strong>JA</strong>.</p></div>
+</details>
+
+<details class="quiz">
+<summary>8. Write the basic array traversal pattern.</summary>
+<div><pre>mov esi, OFFSET arr
+mov ecx, LENGTHOF arr
+
+L1:
+    mov eax, [esi]
+    ; process eax
+    add esi, TYPE arr
+    loop L1</pre></div>
+</details>
+
+<details class="quiz">
+<summary>9. How do you check if an integer is even?</summary>
+<div><pre>test eax, 1
+jz even</pre><p>If the lowest bit is 0, the number is even.</p></div>
+</details>
+
+<details class="quiz">
+<summary>10. Why should you be careful with ECX inside LOOP?</summary>
+<div><p>Because LOOP uses ECX as its counter. Overwriting ECX inside the loop changes the number of iterations and can break the loop.</p></div>
+</details>
+
+<h3>Suggested lab-style problems</h3>
+<ol>
+<li>Read two integers and print their sum.</li>
+<li>Read two integers and print the greater one.</li>
+<li>Read an integer and determine whether it is positive, negative or zero.</li>
+<li>Read an integer and determine whether it is even or odd.</li>
+<li>Print 1 through 10 using LOOP.</li>
+<li>Calculate the sum from 1 through N.</li>
+<li>Declare an array and print every element.</li>
+<li>Find the maximum element in an array.</li>
+<li>Find the minimum element in an array.</li>
+<li>Search an array for a given value and report whether it exists.</li>
+<li>Count how many times a value occurs in an array.</li>
+<li>Trace a program and write the final values of EAX, EBX, ECX, EDX and ESI.</li>
+</ol>
+</section>
+
+
+<section id="lab5manual">
+<h2>24 · Lab 05 Manual Additions — Data-Related Operators, Directives & Addressing</h2>
+<p class="lead">The uploaded Fall 2026 Lab 05 manual adds several details that are easy to miss: direct-offset addressing, the exact behavior of LENGTHOF, little-endian storage, PTR, indirect operands, and indexed operands with TYPE as a scale factor.</p>
+
+<h3>24.1 Direct-offset operands</h3>
+<p>A direct-offset operand accesses a variable/array using its label plus a constant byte displacement.</p>
+<pre>arrayB BYTE 10h, 20h, 30h, 40h
+arrayW WORD 100h, 200h, 300h
+
+mov al, arrayB          ; element 0
+mov al, [arrayB + 1]    ; element 1
+mov ax, [arrayW + 2]    ; element 1</pre>
+<div class="callout red"><strong>Critical:</strong> The displacement is measured in <strong>bytes</strong>, not elements. For a WORD array, the second element is at +2; for a DWORD array, the second element is at +4.</div>
+<table>
+<tr><th>Array type</th><th>Element n address</th><th>Example for element 2</th></tr>
+<tr><td>BYTE</td><td><code>[array + n]</code></td><td><code>[array + 2]</code></td></tr>
+<tr><td>WORD</td><td><code>[array + n*2]</code></td><td><code>[array + 4]</code></td></tr>
+<tr><td>DWORD</td><td><code>[array + n*4]</code></td><td><code>[array + 8]</code></td></tr>
+</table>
+<p>MASM does not perform array-bound checking. An invalid displacement can still assemble and may read unrelated memory.</p>
+
+<h3>24.2 OFFSET</h3>
+<pre>mov esi, OFFSET variable</pre>
+<p><code>OFFSET</code> is evaluated by the assembler and gives the address of the variable. The actual absolute address printed by a program can differ between runs/machines; the relative distances between consecutive variables depend on their sizes.</p>
+
+<h3>24.3 PTR — temporarily override the access size</h3>
+<pre>.data
+myDouble DWORD 12345678h
+
+.code
+mov ax, WORD PTR myDouble
+mov al, BYTE PTR myDouble
+</pre>
+<p>Without PTR, <code>mov ax, myDouble</code> is a size mismatch because <code>myDouble</code> is a DWORD while AX is a WORD.</p>
+<div class="callout blue"><strong>Little-endian reminder:</strong> x86 stores the least-significant byte at the lowest address. For <code>12345678h</code> the bytes in memory are <code>78 56 34 12</code>. Therefore <code>WORD PTR myDouble</code> reads <code>5678h</code>, while <code>WORD PTR [myDouble+2]</code> reads <code>1234h</code>.</div>
+
+<h3>24.4 TYPE, LENGTHOF and SIZEOF — exact manual behavior</h3>
+<table>
+<tr><th>Operator</th><th>Returns</th><th>Example</th></tr>
+<tr><td><code>TYPE x</code></td><td>Bytes in one element</td><td>BYTE=1, WORD=2, DWORD=4, QWORD=8</td></tr>
+<tr><td><code>LENGTHOF x</code></td><td>Number of elements in the declaration</td><td><code>DWORD 1,2,3,4</code> → 4</td></tr>
+<tr><td><code>SIZEOF x</code></td><td>Total bytes</td><td>4 DWORDs → 16</td></tr>
+</table>
+<pre>byte1  BYTE  10,20,30                 ; TYPE=1, LENGTHOF=3, SIZEOF=3
+array1 WORD  30 DUP(?),0,0            ; TYPE=2, LENGTHOF=32, SIZEOF=64
+array2 WORD  5 DUP(3 DUP(?))           ; TYPE=2, LENGTHOF=15, SIZEOF=30
+array3 DWORD 1,2,3,4                   ; TYPE=4, LENGTHOF=4, SIZEOF=16
+digitStr BYTE "12345678",0             ; TYPE=1, LENGTHOF=9, SIZEOF=9</pre>
+<div class="callout"><strong>Formula:</strong> <code>SIZEOF = LENGTHOF × TYPE</code>.</div>
+<p><strong>LENGTHOF pitfall:</strong> it counts the values belonging to the same logical declaration statement. If a declaration is continued, it can remain part of the same declaration; starting a separate data-definition statement can change what LENGTHOF reports.</p>
+
+<h3>24.5 Indirect operands</h3>
+<pre>mov esi, OFFSET byteVal
+mov al, [esi]       ; read memory at address in ESI
+mov [esi], bl       ; write to memory at address in ESI</pre>
+<p>Any 32-bit general-purpose register can serve as an indirect pointer in 32-bit mode. The brackets mean <strong>memory at the address</strong>.</p>
+<table>
+<tr><th>Expression</th><th>Think</th></tr>
+<tr><td><code>ESI</code></td><td>The address itself</td></tr>
+<tr><td><code>[ESI]</code></td><td>The data stored at that address</td></tr>
+<tr><td><code>OFFSET x</code></td><td>The address of x</td></tr>
+</table>
+
+<h3>24.6 PTR with indirect addressing</h3>
+<pre>inc [esi]                 ; ERROR: size is ambiguous
+inc BYTE PTR [esi]       ; 1 byte
+inc WORD PTR [esi]       ; 2 bytes
+inc DWORD PTR [esi]      ; 4 bytes</pre>
+<p>If another operand already determines the size, PTR is often unnecessary:</p>
+<pre>mov al, [esi]             ; AL tells MASM it is a byte
+mov eax, [esi]            ; EAX tells MASM it is a DWORD</pre>
+
+<h3>24.7 Traversing arrays with a pointer</h3>
+<pre>mov esi, OFFSET arrayW
+mov ax, [esi]
+add esi, TYPE arrayW
+mov ax, [esi]</pre>
+<table>
+<tr><th>Array</th><th>Advance pointer by</th></tr>
+<tr><td>BYTE</td><td><code>inc esi</code> or <code>add esi,1</code></td></tr>
+<tr><td>WORD</td><td><code>add esi, TYPE arrayW</code> → 2 bytes</td></tr>
+<tr><td>DWORD</td><td><code>add esi, TYPE arrayD</code> → 4 bytes</td></tr>
+</table>
+
+<h3>24.8 Indexed operands</h3>
+<p>The manual introduces the very useful pattern:</p>
+<pre>arrayName[indexRegister * TYPE arrayName]</pre>
+<p>This lets the index register represent an <strong>element number</strong> rather than a byte offset.</p>
+<pre>.data
+arrayW WORD 1000h,2000h,3000h,4000h
+arrayD DWORD 11111111h,22222222h,33333333h
+
+.code
+mov esi, 1
+mov ax, arrayW[esi * TYPE arrayW]       ; 2000h
+mov esi, 2
+mov eax, arrayD[esi * TYPE arrayD]      ; 33333333h</pre>
+<div class="callout green"><strong>Exam trick:</strong> If the question says “element/index 3,” first ask whether the expression expects a byte displacement or an element index. <code>array[3]</code> is not automatically “fourth element” in every addressing form; the scale factor matters.</div>
+
+<h3>24.9 Lab 05 patterns to practice</h3>
+<ol>
+<li>Given a BYTE/WORD/DWORD array, identify the byte address of a specified element.</li>
+<li>Calculate TYPE, LENGTHOF and SIZEOF without running the program.</li>
+<li>Predict the result of BYTE PTR / WORD PTR / DWORD PTR accesses.</li>
+<li>Trace ESI while traversing an array with <code>add esi, TYPE array</code>.</li>
+<li>Trace indexed expressions such as <code>array[esi * TYPE array]</code>.</li>
+</ol>
+</section>
+
+<section id="lab6manual">
+<h2>25 · Lab 06 Manual Additions — Arrays, JMP, LOOP & Irvine32</h2>
+<p class="lead">The uploaded Lab 06 manual is broader than just “arrays + loops.” It explicitly covers unconditional control transfer, fixed-count LOOPs, nested loops, console I/O, screen/colour control, memory display, random numbers and message boxes.</p>
+
+<h3>25.1 Arrays in the Lab 06 manual</h3>
+<pre>marks   BYTE   78,85,62,91,70
+years   WORD   2022,2023,2024,2025
+prices  DWORD  1500,2750,3200
+buffer  BYTE   50 DUP(?)
+city    BYTE   "Karachi",0</pre>
+<p>Remember: an array is consecutive memory containing elements of the same declared type. A string is effectively a BYTE array containing character codes and, when null-terminated, a final zero byte.</p>
+
+<h3>25.2 Transfer of control</h3>
+<p>Normally execution is sequential. A transfer of control changes where EIP continues execution.</p>
+<table>
+<tr><th>Type</th><th>Meaning</th><th>Examples in this lab</th></tr>
+<tr><td>Unconditional</td><td>Always transfer control</td><td><code>JMP</code></td></tr>
+<tr><td>Conditional</td><td>Transfer only when a condition/flags permit it</td><td>JE, JNE, JG, JL, etc.</td></tr>
+</table>
+<div class="callout red"><strong>Important scope clarification:</strong> The Lab 06 manual specifically says this lab focuses on <strong>unconditional JMP and LOOP</strong>; conditional jumps, CMP and flags are studied in a future lab. Keep the conditional-jump material in this sheet as useful background, but prioritize JMP/LOOP for a Lab 1–6 exam unless your instructor explicitly included later material.</div>
+
+<h3>25.3 Labels</h3>
+<pre>Skip:
+    mov eax, 10</pre>
+<p>A label names a code location; it does not reserve data storage.</p>
+
+<h3>25.4 JMP — forward and backward</h3>
+<pre>jmp Skip
+
+; skipped instructions
+
+Skip:
+    ; execution continues here</pre>
+<p><strong>Forward JMP:</strong> usually skips a block. <strong>Backward JMP:</strong> returns to earlier code and can create repetition.</p>
+<pre>Top:
+    inc eax
+    call WriteDec
+    call Crlf
+    jmp Top</pre>
+<p>This is an endless loop because JMP itself never checks a stopping condition.</p>
+
+<h3>25.5 PUSH / POP in the Lab 06 context</h3>
+<pre>push eax
+mov eax, 500
+call Delay
+pop eax</pre>
+<p><code>PUSH</code> saves a register value on the stack; <code>POP</code> restores it. The manual uses this pattern when EAX must temporarily hold a procedure argument while the original counter/value needs to survive.</p>
+
+<h3>25.6 LOOP — exact behavior</h3>
+<pre>mov ecx, 5
+L1:
+    ; body
+    loop L1</pre>
+<p>In 32-bit mode, LOOP always uses ECX:</p>
+<pre>ECX = ECX - 1
+if ECX != 0 → jump to label
+else → continue after LOOP</pre>
+<div class="callout blue"><strong>LOOP does not modify flags.</strong> Also, ECX must not be unintentionally changed inside the loop.</div>
+
+<h4>Important LOOP mistakes from the manual</h4>
+<ul>
+<li><strong>ECX = 0 before LOOP:</strong> LOOP decrements it first, producing FFFFFFFFh, so the loop can run 4,294,967,296 times. Always start with a non-zero count.</li>
+<li><strong>Changing ECX inside the body:</strong> this corrupts the loop counter. Save/restore it if a nested loop or procedure requires ECX.</li>
+<li><strong>Very long LOOP body:</strong> LOOP's encoded destination has a short displacement range; an excessively distant label can produce a “jump destination too far” assembler error.</li>
+</ul>
+
+<h3>25.7 Counting and summation pattern</h3>
+<pre>mov ebx, 0
+mov ecx, 10
+
+L1:
+    add ebx, ecx
+    mov eax, ecx
+    call WriteDec
+    loop L1
+
+; EBX = 55</pre>
+<p>ECX values used by the body are 10, 9, 8, ..., 1. Therefore the sum is 55.</p>
+
+<h3>25.8 Array sum using indexed addressing</h3>
+<pre>intArray DWORD 10,20,30,40,50
+
+mov esi, 0
+mov ebx, 0
+mov ecx, LENGTHOF intArray
+
+L1:
+    mov eax, intArray[esi * TYPE intArray]
+    add ebx, eax
+    inc esi
+    loop L1</pre>
+<p>At the end, EBX = 150.</p>
+
+<h3>25.9 Filling an array with a loop</h3>
+<pre>multiples DWORD 8 DUP(?)
+
+mov esi, OFFSET multiples
+mov eax, 0
+mov ecx, LENGTHOF multiples
+
+Fill:
+    add eax, 5
+    mov [esi], eax
+    add esi, TYPE multiples
+    loop Fill</pre>
+<p>This creates 5, 10, 15, 20, 25, 30, 35, 40.</p>
+
+<h3>25.10 Nested loops</h3>
+<p>Because <code>LOOP</code> always uses ECX, an inner loop would destroy the outer loop counter unless you save and restore it.</p>
+<pre>.data
+outerCount DWORD ?
+
+.code
+mov ebx, 1
+mov ecx, 5
+
+Outer:
+    mov outerCount, ecx
+    mov ecx, ebx
+
+Inner:
+    mov al, '*'
+    call WriteChar
+    loop Inner
+
+    call Crlf
+    inc ebx
+    mov ecx, outerCount
+    loop Outer</pre>
+<p>Output:</p>
+<pre>*
+**
+***
+****
+*****</pre>
+<div class="callout green"><strong>Nested-loop rule:</strong> save outer ECX → load inner ECX → run inner LOOP → restore outer ECX → run outer LOOP.</div>
+
+<h3>25.11 Irvine32 register convention</h3>
+<p>The manual emphasizes that Irvine32 procedures receive arguments through registers. Load arguments immediately before <code>CALL</code>. A procedure normally preserves general-purpose registers except those it uses to return a result.</p>
+<table>
+<tr><th>Procedure</th><th>Input / return</th><th>Use</th></tr>
+<tr><td><code>Clrscr</code></td><td>—</td><td>Clear console.</td></tr>
+<tr><td><code>Crlf</code></td><td>—</td><td>New line.</td></tr>
+<tr><td><code>Delay</code></td><td>EAX = milliseconds</td><td>Pause execution.</td></tr>
+<tr><td><code>DumpRegs</code></td><td>—</td><td>Display registers and flags.</td></tr>
+<tr><td><code>DumpMem</code></td><td>ESI=start, ECX=count, EBX=unit size</td><td>Display memory.</td></tr>
+<tr><td><code>GetMaxXY</code></td><td>returns DX=columns, AX=rows</td><td>Console dimensions.</td></tr>
+<tr><td><code>GetMseconds</code></td><td>returns EAX</td><td>Milliseconds since midnight.</td></tr>
+<tr><td><code>GetTextColor</code></td><td>returns AL</td><td>Current text colours.</td></tr>
+<tr><td><code>Gotoxy</code></td><td>DH=row, DL=column</td><td>Move cursor.</td></tr>
+<tr><td><code>Random32</code></td><td>returns EAX</td><td>Random 32-bit value.</td></tr>
+<tr><td><code>Randomize</code></td><td>—</td><td>Seed random generator.</td></tr>
+<tr><td><code>RandomRange</code></td><td>EAX=n → returns 0..n−1</td><td>Random range.</td></tr>
+<tr><td><code>ReadChar</code></td><td>returns AL</td><td>Read one key without echo.</td></tr>
+<tr><td><code>ReadDec</code></td><td>returns EAX</td><td>Unsigned decimal input.</td></tr>
+<tr><td><code>ReadHex</code></td><td>returns EAX</td><td>Hex input.</td></tr>
+<tr><td><code>ReadInt</code></td><td>returns EAX</td><td>Signed decimal input.</td></tr>
+<tr><td><code>ReadString</code></td><td>EDX=buffer, ECX=size; EAX=count</td><td>Read a string.</td></tr>
+<tr><td><code>SetTextColor</code></td><td>EAX=foreground + background×16</td><td>Set text colour.</td></tr>
+<tr><td><code>WaitMsg</code></td><td>—</td><td>Wait for a key.</td></tr>
+<tr><td><code>WriteBin</code></td><td>EAX=value</td><td>Binary output.</td></tr>
+<tr><td><code>WriteChar</code></td><td>AL=character</td><td>Character output.</td></tr>
+<tr><td><code>WriteDec</code></td><td>EAX=value</td><td>Unsigned decimal output.</td></tr>
+<tr><td><code>WriteHex</code></td><td>EAX=value</td><td>8-digit hexadecimal output.</td></tr>
+<tr><td><code>WriteInt</code></td><td>EAX=value</td><td>Signed decimal output with sign.</td></tr>
+<tr><td><code>WriteString</code></td><td>EDX=OFFSET string</td><td>Null-terminated string output.</td></tr>
+</table>
+
+<h3>25.12 Output formats — an easy exam comparison</h3>
+<pre>mov eax, 2026
+call WriteDec    ; 2026
+call WriteInt    ; +2026
+call WriteHex    ; 000007EA
+call WriteBin    ; binary representation
+
+mov al, 'A'
+call WriteChar   ; A</pre>
+<p>For a negative value such as -2026, <code>WriteInt</code> displays the signed value, while <code>WriteHex</code> shows its 32-bit two's-complement bit pattern.</p>
+
+<h3>25.13 ReadString pattern</h3>
+<pre>userName BYTE 31 DUP(0)
+
+mov edx, OFFSET userName
+mov ecx, SIZEOF userName
+call ReadString</pre>
+<p>EDX points to the buffer, ECX gives the buffer size, and EAX returns the number of characters read. The procedure stores a null terminator, allowing the buffer to be printed using WriteString.</p>
+
+<h3>25.14 Screen and colour procedures</h3>
+<pre>call Clrscr
+
+mov eax, yellow + (blue * 16)
+call SetTextColor
+
+mov dh, 3
+mov dl, 10
+call Gotoxy
+
+mov edx, OFFSET msg
+call WriteString</pre>
+<p>Rows and columns start at 0. The colour value is:</p>
+<pre>foreground + (background * 16)</pre>
+<p>Manual colour constants include black=0, blue=1, green=2, cyan=3, red=4, magenta=5, brown=6, lightGray=7, gray=8, lightBlue=9, lightGreen=10, lightCyan=11, lightRed=12, lightMagenta=13, yellow=14, white=15.</p>
+
+<h3>25.15 DumpMem</h3>
+<pre>mov esi, OFFSET arrayW
+mov ecx, LENGTHOF arrayW
+mov ebx, TYPE arrayW
+call DumpMem</pre>
+<p>This is a very useful debugging technique: OFFSET gives the start address, LENGTHOF gives the number of units, and TYPE gives the unit size.</p>
+
+<h3>25.16 Random numbers</h3>
+<pre>call Randomize
+mov eax, 6
+call RandomRange       ; EAX = 0..5
+inc eax                ; EAX = 1..6</pre>
+<p>The manual's dice example fills an array with 10 random values from 1 to 6:</p>
+<pre>rolls DWORD 10 DUP(?)
+
+call Randomize
+mov esi, OFFSET rolls
+mov ecx, LENGTHOF rolls
+
+Fill:
+    mov eax, 6
+    call RandomRange
+    inc eax
+    mov [esi], eax
+    add esi, TYPE rolls
+    loop Fill</pre>
+<div class="callout">Call <code>Randomize</code> once near the beginning. <code>RandomRange</code> with EAX=n returns values from 0 through n−1.</div>
+
+<h3>25.17 Message boxes</h3>
+<pre>cap BYTE "Lab 06",0
+msg BYTE "Assembly language is fun!",0
+
+mov ebx, OFFSET cap
+mov edx, OFFSET msg
+call MsgBox</pre>
+<p>For <code>MsgBoxAsk</code>, EDX is the message, EBX is the caption, and EAX receives <code>IDYES = 6</code> or <code>IDNO = 7</code>.</p>
+<pre>mov ebx, OFFSET cap
+mov edx, OFFSET question
+call MsgBoxAsk
+; EAX = 6 for Yes, 7 for No</pre>
+<p>Multi-line message text can contain <code>0Dh,0Ah</code> between lines.</p>
+
+<h3>25.18 Lab 06 high-value code patterns</h3>
+<div class="grid">
+<div class="card"><h3>Array traversal</h3><pre>mov esi, OFFSET arr
+mov ecx, LENGTHOF arr
+L1:
+    mov eax, [esi]
+    ; use eax
+    add esi, TYPE arr
+    loop L1</pre></div>
+<div class="card"><h3>Indexed traversal</h3><pre>mov esi, 0
+mov ecx, LENGTHOF arr
+L1:
+    mov eax, arr[esi * TYPE arr]
+    inc esi
+    loop L1</pre></div>
+<div class="card"><h3>Fixed repetition</h3><pre>mov ecx, N
+L1:
+    ; body
+    loop L1</pre></div>
+<div class="card"><h3>Nested loops</h3><pre>mov outerCount, ecx
+mov ecx, innerCount
+Inner:
+    ; body
+    loop Inner
+mov ecx, outerCount
+loop Outer</pre></div>
+</div>
+</section>
+
+<section id="manualexam">
+<h2>26 · Updated Exam Priority After Reading the Manuals</h2>
+<div class="callout green">
+<strong>Highest priority for a Lab 1–6 mid:</strong> data definitions → OFFSET/PTR/TYPE/LENGTHOF/SIZEOF → direct-offset → indirect addressing → indexed operands → arrays → JMP → LOOP → nested loops → basic Irvine32 procedures.
+</div>
+<table>
+<tr><th>Topic</th><th>Priority</th><th>What you should be able to do</th></tr>
+<tr><td>TYPE / LENGTHOF / SIZEOF</td><td>★★★★★</td><td>Calculate them mentally and use them in array loops.</td></tr>
+<tr><td>OFFSET / [register]</td><td>★★★★★</td><td>Distinguish an address from the value at that address.</td></tr>
+<tr><td>PTR / little endian</td><td>★★★★★</td><td>Predict BYTE/WORD/DWORD reads from a larger variable.</td></tr>
+<tr><td>Indexed operands</td><td>★★★★★</td><td>Trace <code>array[esi * TYPE array]</code>.</td></tr>
+<tr><td>Arrays</td><td>★★★★★</td><td>Declare, read, modify, traverse, sum and fill arrays.</td></tr>
+<tr><td>JMP / labels</td><td>★★★★★</td><td>Trace forward/backward jumps and identify skipped/repeated code.</td></tr>
+<tr><td>LOOP / ECX</td><td>★★★★★</td><td>Trace the counter, write fixed loops and avoid ECX mistakes.</td></tr>
+<tr><td>Nested loops</td><td>★★★★☆</td><td>Save/restore outer ECX and understand total iterations.</td></tr>
+<tr><td>Irvine32 I/O</td><td>★★★★☆</td><td>Know which register carries each argument/result.</td></tr>
+<tr><td>Random / screen / MsgBox</td><td>★★★☆☆</td><td>Know basic calling conventions and recognize code patterns.</td></tr>
+<tr><td>Conditional jumps / CMP</td><td>Background</td><td>Useful general knowledge, but the Lab 06 manual explicitly places them in a future lab.</td></tr>
+</table>
+
+<h3>Last-minute dry-run checklist</h3>
+<ol>
+<li>Underline every register that changes.</li>
+<li>Circle every memory access and ask: value or address?</li>
+<li>For an array, write the element size beside it.</li>
+<li>For <code>LENGTHOF</code>, count elements—not bytes.</li>
+<li>For <code>SIZEOF</code>, multiply element count × element size.</li>
+<li>For <code>[array + displacement]</code>, remember displacement is bytes.</li>
+<li>For <code>array[index * TYPE array]</code>, treat index as an element number.</li>
+<li>For <code>LOOP</code>, write the ECX value before and after every iteration.</li>
+<li>For nested LOOPs, mark where outer ECX is saved and restored.</li>
+<li>For Irvine32 calls, check the required input register immediately before CALL.</li>
+</ol>
+
+<div class="callout red"><strong>One correction to the earlier sheet:</strong> The conditional-jump/CMP section remains useful, but the uploaded Lab 06 manual explicitly states that conditional jumps, CMP and flags are studied in a future lab. For a strict Labs 1–6 mid, do not spend more revision time on conditional jumps than on Lab 05 addressing and Lab 06 JMP/LOOP/arrays.</div>
+</section>
+
+<section>
+<h2>Final Mental Model</h2>
+<div class="card">
+<p>When you see Assembly code, read it as a sequence of very small actions:</p>
+<pre>1. Where is the data?
+        ↓
+2. Which register holds it?
+        ↓
+3. Is this a value or an address?
+        ↓
+4. If [register] appears, what memory does it point to?
+        ↓
+5. If CMP appears, which flags change?
+        ↓
+6. Which jump reads those flags?
+        ↓
+7. If LOOP appears, what is ECX?
+        ↓
+8. If it is an array, how far should the pointer move?
+        ↓
+9. Dry-run the values one instruction at a time.</pre>
+<div class="callout green">
+<strong>Do not memorize Assembly as random syntax.</strong> Build the mental model first. Once you understand what the registers, memory addresses, flags and jumps are doing, the code becomes much easier to predict and write.
+</div>
+</div>
+</section>
+
+<footer>
+<p><strong>COAL Mid Exam Study Sheet · MASM + Irvine32 · FAST-NUCES</strong></p>
+<p>Prepared as a standalone revision document from the material and the uploaded Fall 2026 Lab 05 and Lab 06 manuals. It assumes no prior COAL knowledge and distinguishes the manual's strict Lab 06 scope from later conditional-jump material.</p><hr>
+<p><Strong>Created By: </Strong>VoidEx</p>
+</footer>
+
+</div>
+</main>
+
+<a class="top" href="#top" aria-label="Back to top">↑</a>
+
+<script>
+document.querySelectorAll('.checklist input').forEach((box, i) => {
+  const key = 'coal-check-' + i;
+  box.checked = localStorage.getItem(key) === '1';
+  box.addEventListener('change', () => {
+    localStorage.setItem(key, box.checked ? '1' : '0');
+  });
+});
+</script>
+</body>
+</html>
